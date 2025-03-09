@@ -1,16 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { deleteBook, fetchBooks } from "../actions/bookAction";
+import { deleteBook, fetchBooks, getBookById } from "../actions/bookAction";
 import { BookType } from "@/page/book/types";
 
 
 interface BookState {
     books: BookType[];
+    book: BookType | null;
+    isOpenModal: boolean;
+    modeModal: "create" | "edit";
+    selectedID?: string;
     loading: boolean;
     error: string | null;
 }
 
 const initialState: BookState = {
     books: [],
+    book: null,
+    isOpenModal: false,
+    modeModal: "create",
+    selectedID: undefined,
     loading: false,
     error: null,
 };
@@ -21,8 +29,29 @@ const bookSlice = createSlice({
     reducers: {
         resetBook: (state) => {
             state.books = [];
+            state.book = null;
             state.loading = false;
             state.error = null;
+        },
+        openCreateModal: (state, action: PayloadAction<{
+            isOpenModal: boolean;
+
+
+        }>) => {
+            state.isOpenModal = action.payload.isOpenModal;
+            state.modeModal = "create"
+        },
+        openEditModal: (state, action: PayloadAction<{
+            isOpenModal: boolean;
+            id?: string;
+        }>) => {
+            state.isOpenModal = action.payload.isOpenModal;
+            state.selectedID = action.payload.id;
+            state.modeModal = "edit"
+        },
+        closeModal: (state) => {
+            state.isOpenModal = false;
+            state.selectedID = undefined;
         },
     },
     extraReducers: (builder) => {
@@ -59,6 +88,6 @@ const bookSlice = createSlice({
     }
 })
 
-export const { resetBook } = bookSlice.actions;
+export const { resetBook, openCreateModal, openEditModal, closeModal } = bookSlice.actions;
 
 export default bookSlice.reducer;

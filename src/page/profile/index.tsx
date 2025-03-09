@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -14,7 +15,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-export default function Dashboard() {
+export default function Profile() {
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -26,17 +27,37 @@ export default function Dashboard() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">Home</BreadcrumbLink>
+                  <BreadcrumbLink href="#">Account</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Dashboard</BreadcrumbPage>
+                  <BreadcrumbPage>Profile</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0"></div>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+            <Card>
+              <CardHeader>
+                <CardTitle>Account</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div>
+                  <span>Name</span>
+                  <span> : Rizki Putra</span>
+                </div>
+                <div className="flex flex-row gap-1">
+                  <span>Phone</span>
+                  <span> : +62 8777974137</span>
+                </div>
+              </CardContent>
+            </Card>
+            <div className="aspect-video rounded-xl bg-muted/50" />
+            <div className="aspect-video rounded-xl bg-muted/50" />
+          </div>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

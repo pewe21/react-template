@@ -12,6 +12,7 @@ import {
   Moon,
   Sparkles,
   Sun,
+  User2,
   UserPlus,
 } from "lucide-react";
 
@@ -38,6 +39,7 @@ import {
 import { useTheme } from "./theme-provider";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export function NavUser({
   user,
@@ -53,6 +55,8 @@ export function NavUser({
   const { setTheme, theme } = useTheme();
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   useEffect(() => {}, []);
 
@@ -100,9 +104,9 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+              <DropdownMenuItem onClick={() => navigate("/profile")}>
+                <User2 />
+                Profile
               </DropdownMenuItem>
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger>
@@ -141,6 +145,7 @@ export function NavUser({
             <DropdownMenuItem
               onClick={() => {
                 dispatch({ type: "auth/logout" });
+                console.log("aku klik logout");
               }}
             >
               <LogOut />

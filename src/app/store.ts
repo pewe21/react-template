@@ -1,11 +1,10 @@
 
 import { configureStore } from "@reduxjs/toolkit";
-import { persistStore } from "redux-persist";
+import { persistStore, persistReducer } from "redux-persist";
 
 import bookSlice from "./features/bookSlice";
 import AuthReducer from "@/app/features/authSlice";
 
-import { persistReducer } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
 import { setupInterceptors } from "@/interceptor/axiosInstance";
 import { authMiddleware } from "./middleware/authMiddleware";
@@ -25,7 +24,8 @@ export const store = configureStore({
     book: bookSlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }).concat(authMiddleware),
+    getDefaultMiddleware({ serializableCheck: false })
+  // .concat(authMiddleware),
 });
 
 export const persistor = persistStore(store);

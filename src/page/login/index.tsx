@@ -65,7 +65,6 @@ export default function Login() {
                   id="name"
                   placeholder="Enter your Username"
                   onChange={(e) =>
-                    // (formLogin.current.username = e.target.value)
                     setFormLogin((prev) => ({
                       ...prev,
                       username: e.target.value,
@@ -75,14 +74,6 @@ export default function Login() {
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Password</Label>
-                {/* <Input
-                  id="password"
-                  placeholder="**************"
-                  onChange={(e) =>
-                    // (formLogin.current.password = e.target.value)
-                    setFormLogin({ ...formLogin, password: e.target.value })
-                  }
-                /> */}
 
                 <PasswordInput
                   id="password"

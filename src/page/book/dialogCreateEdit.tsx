@@ -1,4 +1,6 @@
-import { addBook, fetchBooks } from "@/app/actions/bookAction";
+import { addBook, fetchBooks, getBookById } from "@/app/actions/bookAction";
+import { closeModal, openCreateModal } from "@/app/features/bookSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hook";
 import { AppDispatch } from "@/app/store";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,37 +10,67 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { PlusCircle } from "lucide-react";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-export function DialogCreateBook() {
-  const dispatch = useDispatch<AppDispatch>();
-  const [formBook, setFormBook] = useState({
+export function DialogCreateEditBook() {
+  const dispatch = useAppDispatch();
+  const { isOpenModal, selectedID, modeModal } = useAppSelector(
+    (state) => state.book
+  );
+
+  interface FormBook {
+    code: string;
+    title: string;
+    desc: string;
+  }
+
+  const [formBook, setFormBook] = useState<FormBook>({
     code: "",
     title: "",
     desc: "",
   });
 
-  const [open, setOpen] = useState(false);
-
-  const closeDialog = () => {
-    setOpen(false); // 🔥 Fungsi untuk menutup dialog
-  };
+  useEffect(() => {
+    if (modeModal === "edit" && selectedID) {
+      dispatch(getBookById(selectedID)).then((res) => {
+        if (res.payload.data) {
+          setFormBook({
+            code: res.payload.data.code,
+            title: res.payload.data.name,
+            desc: res.payload.data.description,
+          });
+        }
+      });
+    } else {
+      setFormBook({
+        code: "",
+        title: "",
+        desc: "",
+      });
+    }
+  }, [modeModal, selectedID]);
 
   const handleSubmit = () => {
     dispatch(addBook(formBook)).then((res) => {
       if (res.payload.status === "success") {
-        closeDialog();
+        modeModal === "create" &&
+          toast.success("Book has been created successfully", {
+            position: "top-center",
+          });
+        modeModal === "edit" &&
+          toast.success("Book has been updated successfully", {
+            position: "top-center",
+          });
+        dispatch(closeModal());
         dispatch(fetchBooks());
       } else {
-        alert("Failed to create book");
+        toast.error("Failed to create book");
       }
 
       setFormBook({
@@ -49,18 +81,16 @@ export function DialogCreateBook() {
     });
   };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="default">
-          <PlusCircle />
-          Create
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpenModal} onOpenChange={() => dispatch(closeModal())}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create Book</DialogTitle>
+          <DialogTitle>
+            {modeModal === "create" ? "Create Book" : "Edit Book"}
+          </DialogTitle>
           <DialogDescription>
-            Make sure your book is unique and easy to remember.
+            {modeModal === "create"
+              ? "Create a new book by filling the form below"
+              : "Edit the book by filling the form below"}
           </DialogDescription>
           <DialogClose />
         </DialogHeader>
@@ -73,6 +103,8 @@ export function DialogCreateBook() {
               id="code"
               placeholder="Enter the code"
               className="col-span-3"
+              value={formBook.code}
+              disabled={modeModal === "edit"}
               onChange={(e) =>
                 setFormBook((prev) => ({ ...prev, code: e.target.value }))
               }
@@ -86,6 +118,7 @@ export function DialogCreateBook() {
               id="name"
               placeholder="Enter the name"
               className="col-span-3"
+              value={formBook.title}
               onChange={(e) =>
                 setFormBook((prev) => ({ ...prev, title: e.target.value }))
               }
@@ -99,6 +132,7 @@ export function DialogCreateBook() {
               id="description"
               placeholder="Enter the description"
               className="col-span-3"
+              value={formBook.desc}
               onChange={(e) =>
                 setFormBook((prev) => ({ ...prev, desc: e.target.value }))
               }

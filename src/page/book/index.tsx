@@ -17,7 +17,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import { DialogCreateBook } from "./dialogCreate";
+import { DialogCreateEditBook } from "./dialogCreateEdit";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect } from "react";
@@ -25,6 +25,9 @@ import { useEffect } from "react";
 import { DataTable } from "@/components/datatable";
 import { bookColumns } from "./column";
 import { fetchBooks } from "@/app/actions/bookAction";
+import { Button } from "@/components/ui/button";
+import { openCreateModal } from "@/app/features/bookSlice";
+import { PlusCircle } from "lucide-react";
 
 export default function Book() {
   const { loading, books } = useSelector((state: RootState) => state.book);
@@ -60,7 +63,14 @@ export default function Book() {
           <div className="p-5">
             <h1 className="text-2xl font-bold">Book</h1>
             <div className="mt-7">
-              <DialogCreateBook />
+              <Button
+                variant="default"
+                onClick={() => dispatch(openCreateModal({ isOpenModal: true }))}
+              >
+                <PlusCircle />
+                Create
+              </Button>
+              <DialogCreateEditBook />
 
               {loading ? (
                 <Skeleton className="mt-5 h-[225px] w-full rounded-xl" />

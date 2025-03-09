@@ -30,7 +30,7 @@ const AuthSlice = createSlice({
     initialState,
     reducers: {
         logout: (state, action: PayloadAction) => {
-            console.log(action.payload);
+
             let message = action.payload as string | unknown;
             if (message == "exp") {
                 state.errMessage = "silahkan login kembali";
@@ -74,8 +74,7 @@ const AuthSlice = createSlice({
         });
 
         builder.addCase(checkuserdata.fulfilled, (state, action: PayloadAction<{ status: string, data: any }>) => {
-            if (action.payload.status == "success") {
-            } else {
+            if (action.payload.status != "success") {
                 state.token = null;
                 state.refreshToken = null;
                 state.user = null;

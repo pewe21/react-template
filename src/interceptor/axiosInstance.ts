@@ -3,7 +3,7 @@ import { BACKEND_URL, DISPATCH_LOGOUT, EXP } from '@/app/constants';
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: BACKEND_URL,
+    baseURL: BACKEND_URL, // "http://localhost:7072/api"
     headers: {
         'Content-Type': 'application/json',
     },

@@ -22,6 +22,8 @@ export const deleteBook = createAsyncThunk(
     async (id: string, { rejectWithValue }) => {
         try {
             const response = await api.delete(`/book/${id}`);
+
+
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || "Failed to delete book");
@@ -37,6 +39,20 @@ export const addBook = createAsyncThunk(
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || "Failed to add book");
+        }
+    }
+);
+
+export const getBookById = createAsyncThunk(
+    "books/getBookById",
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const response = await api.get(`/book/${id}`);
+            return response.data;
+        } catch (error: any) {
+            console.log("masuk error", error);
+
+            return rejectWithValue(error.response?.statusText || "Failed to fetch books");
         }
     }
 );

@@ -3,6 +3,7 @@ import Login from "@/page/login";
 import Dashboard from "@/page/dashboard";
 import ProtectedRoute from "./Protected";
 import { masterRouter } from "./master-route";
+import Profile from "@/page/profile";
 
 const protectedRouter: RouteObject[] = [
   {
@@ -10,6 +11,15 @@ const protectedRouter: RouteObject[] = [
     element: (
       <ProtectedRoute>
         <Dashboard />
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: "/profile",
+    element: (
+      <ProtectedRoute>
+        <Profile />
       </ProtectedRoute>
     ),
   },

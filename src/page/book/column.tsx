@@ -17,9 +17,11 @@ import {
   Trash,
 } from "lucide-react";
 import { BookType } from "./types";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/app/store";
 import { deleteBook, fetchBooks } from "@/app/actions/bookAction";
+import { useAppDispatch } from "@/app/hook";
+import { toast } from "sonner";
+import { openCreateModal, openEditModal } from "@/app/features/bookSlice";
+import { DeleteDialog } from "./deleteDialog";
 
 const bookColumns: ColumnDef<BookType>[] = [
   // {
@@ -97,7 +99,7 @@ const bookColumns: ColumnDef<BookType>[] = [
     cell: ({ row }) => {
       const book = row.original;
 
-      const dispatch = useDispatch<AppDispatch>();
+      const dispatch = useAppDispatch();
 
       return (
         <DropdownMenu>
@@ -115,7 +117,11 @@ const bookColumns: ColumnDef<BookType>[] = [
               <Clipboard /> Copy Book ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                dispatch(openEditModal({ isOpenModal: true, id: book.id }));
+              }}
+            >
               <Pencil />
               Edit
             </DropdownMenuItem>
@@ -123,9 +129,12 @@ const bookColumns: ColumnDef<BookType>[] = [
               onClick={() => {
                 dispatch(deleteBook(book.id)).then((res) => {
                   if (res.payload.status == "success") {
-                    dispatch(fetchBooks());
+                    toast.success("Book has been deleted successfully", {
+                      position: "top-center",
+                    });
+                    dispatch(fetchBooks()).then();
                   } else {
-                    alert("Failed to delete book");
+                    toast.error("Failed to delete book");
                   }
                 });
               }}
@@ -133,6 +142,9 @@ const bookColumns: ColumnDef<BookType>[] = [
               <Trash />
               Delete
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
+
+            <DeleteDialog />
           </DropdownMenuContent>
         </DropdownMenu>
       );
