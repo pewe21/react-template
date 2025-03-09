@@ -20,7 +20,11 @@ import { BookType } from "./types";
 import { deleteBook, fetchBooks } from "@/app/actions/bookAction";
 import { useAppDispatch } from "@/app/hook";
 import { toast } from "sonner";
-import { openCreateModal, openEditModal } from "@/app/features/bookSlice";
+import {
+  openCreateModal,
+  openDeleteModal,
+  openEditModal,
+} from "@/app/features/bookSlice";
 import { DeleteDialog } from "./deleteDialog";
 
 const bookColumns: ColumnDef<BookType>[] = [
@@ -98,7 +102,6 @@ const bookColumns: ColumnDef<BookType>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const book = row.original;
-
       const dispatch = useAppDispatch();
 
       return (
@@ -127,24 +130,12 @@ const bookColumns: ColumnDef<BookType>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
-                dispatch(deleteBook(book.id)).then((res) => {
-                  if (res.payload.status == "success") {
-                    toast.success("Book has been deleted successfully", {
-                      position: "top-center",
-                    });
-                    dispatch(fetchBooks()).then();
-                  } else {
-                    toast.error("Failed to delete book");
-                  }
-                });
+                dispatch(openDeleteModal({ isOpenModal: true, id: book.id }));
               }}
             >
               <Trash />
               Delete
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-
-            <DeleteDialog />
           </DropdownMenuContent>
         </DropdownMenu>
       );

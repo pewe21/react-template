@@ -28,6 +28,7 @@ import { fetchBooks } from "@/app/actions/bookAction";
 import { Button } from "@/components/ui/button";
 import { openCreateModal } from "@/app/features/bookSlice";
 import { PlusCircle } from "lucide-react";
+import { DeleteDialog } from "./deleteDialog";
 
 export default function Book() {
   const { loading, books } = useSelector((state: RootState) => state.book);
@@ -71,6 +72,7 @@ export default function Book() {
                 Create
               </Button>
               <DialogCreateEditBook />
+              <DeleteDialog />
 
               {loading ? (
                 <Skeleton className="mt-5 h-[225px] w-full rounded-xl" />

@@ -96,10 +96,5 @@ const AuthSlice = createSlice({
 export const { logout } = AuthSlice.actions;
 
 
-
-// export const persistedAuthReducer = persistReducer(persistConfig, AuthSlice.reducer);
-
-// export default persistedAuthReducer;
-
 export const selectAuth = (state: { auth: AuthState }) => state.auth;
 export default AuthSlice.reducer;
