@@ -5,7 +5,6 @@ import { BookType } from "@/page/book/types";
 
 interface BookState {
     books: BookType[];
-    book: BookType | null;
     isOpenModal: boolean;
     isDeleteOpenModal: boolean;
     modeModal: "create" | "edit";
@@ -16,7 +15,6 @@ interface BookState {
 
 const initialState: BookState = {
     books: [],
-    book: null,
     isOpenModal: false,
     isDeleteOpenModal: false,
     modeModal: "create",
@@ -31,7 +29,6 @@ const bookSlice = createSlice({
     reducers: {
         resetBook: (state) => {
             state.books = [];
-            state.book = null;
             state.loading = false;
             state.error = null;
         },

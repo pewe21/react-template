@@ -7,19 +7,17 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z, ZodError } from "zod";
+import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -28,6 +26,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { SendIcon } from "lucide-react";
 
 export function DialogCreateEditBookV2() {
   const dispatch = useAppDispatch();
@@ -79,8 +78,7 @@ export function DialogCreateEditBookV2() {
         desc: "",
       });
     }
-  }, [modeModal, selectedID]);
-  
+  }, [modeModal, selectedID, dispatch]);
 
   const handleUpdate = (values: z.infer<typeof BookValidation.EDIT>) => {
     dispatch(addBook(values)).then((res) => {
@@ -121,8 +119,17 @@ export function DialogCreateEditBookV2() {
       });
     });
   };
+
+  const handleCloseModal = () => {
+    dispatch(closeModal());
+    form.reset({
+      code: "",
+      title: "",
+      desc: "",
+    });
+  };
   return (
-    <Dialog open={isOpenModal} onOpenChange={() => dispatch(closeModal())}>
+    <Dialog open={isOpenModal} onOpenChange={handleCloseModal}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
@@ -188,60 +195,16 @@ export function DialogCreateEditBookV2() {
               )}
             />
             <div className="flex justify-end space-x-4">
-              <Button type="submit">Submit</Button>
+              <Button type="submit">
+                <SendIcon className="w-5 h-5 -ml-1" />
+                Submit
+              </Button>
+              <Button type="button" variant="ghost" onClick={handleCloseModal}>
+                Cancel
+              </Button>
             </div>
           </form>
         </Form>
-        {/* <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Code
-            </Label>
-            <Input
-              id="code"
-              placeholder="Enter the code"
-              className="col-span-3"
-              value={formBook.code}
-              disabled={modeModal === "edit"}
-              onChange={(e) =>
-                setFormBook((prev) => ({ ...prev, code: e.target.value }))
-              }
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              placeholder="Enter the name"
-              className="col-span-3"
-              value={formBook.title}
-              onChange={(e) =>
-                setFormBook((prev) => ({ ...prev, title: e.target.value }))
-              }
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="description" className="text-right">
-              Description
-            </Label>
-            <Textarea
-              id="description"
-              placeholder="Enter the description"
-              className="col-span-3"
-              value={formBook.desc}
-              onChange={(e) =>
-                setFormBook((prev) => ({ ...prev, desc: e.target.value }))
-              }
-            ></Textarea>
-          </div>
-        </div> */}
-        {/* <DialogFooter>
-          <Button onClick={handleSubmit} type="submit">
-            Save changes
-          </Button>
-        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   );
