@@ -1,5 +1,6 @@
 import Book from "@/page/book";
 import ProtectedRoute from "./Protected";
+import Publisher from "@/page/publisher";
 
 export const masterRouter = [
   {
@@ -7,6 +8,14 @@ export const masterRouter = [
     element: (
       <ProtectedRoute>
         <Book />,
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "master/publisher",
+    element: (
+      <ProtectedRoute>
+        <Publisher />,
       </ProtectedRoute>
     ),
   },

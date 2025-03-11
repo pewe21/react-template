@@ -18,6 +18,7 @@ import {
 import { BookType } from "./types";
 import { useAppDispatch } from "@/app/hook";
 import { openDeleteModal, openEditModal } from "@/app/features/bookSlice";
+import { toast } from "sonner";
 
 const bookColumns: ColumnDef<BookType>[] = [
   // {
@@ -42,6 +43,17 @@ const bookColumns: ColumnDef<BookType>[] = [
   //   enableSorting: false,
   //   enableHiding: false,
   // },
+  {
+    accessorKey: "number",
+    header: "No",
+    cell: ({ row }) => {
+      return <div>{row.index + 1}</div>;
+    },
+    enableResizing: false,
+    enableHiding: false,
+    size: 100,
+    maxSize: 100,
+  },
   {
     accessorKey: "code",
     header: ({ column }) => {
@@ -96,6 +108,19 @@ const bookColumns: ColumnDef<BookType>[] = [
       const book = row.original;
       const dispatch = useAppDispatch();
 
+      const handleCopyBookCode = () => {
+        navigator.clipboard.writeText(book.code);
+        toast.success("Book ID copied to clipboard");
+      };
+
+      const handleEdit = () => {
+        dispatch(openEditModal({ isOpenModal: true, id: book.id }));
+      };
+
+      const handleDelete = () => {
+        dispatch(openDeleteModal({ isOpenModal: true, id: book.id }));
+      };
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -106,25 +131,15 @@ const bookColumns: ColumnDef<BookType>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(book.id)}
-            >
-              <Clipboard /> Copy Book ID
+            <DropdownMenuItem onClick={handleCopyBookCode}>
+              <Clipboard /> Copy Book Code
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                dispatch(openEditModal({ isOpenModal: true, id: book.id }));
-              }}
-            >
+            <DropdownMenuItem onClick={handleEdit}>
               <Pencil />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                dispatch(openDeleteModal({ isOpenModal: true, id: book.id }));
-              }}
-            >
+            <DropdownMenuItem onClick={handleDelete}>
               <Trash />
               Delete
             </DropdownMenuItem>

@@ -1,10 +1,9 @@
+import { PublisherType } from "@/page/publisher/types";
+import { fetchPublishers } from "../actions/publisherAction";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { deleteBook, fetchBooks } from "../actions/bookAction";
-import { BookType } from "@/page/book/types";
 
-
-interface BookState {
-    books: BookType[];
+interface PublisherState {
+    publishers: PublisherType[];
     isOpenModal: boolean;
     isDeleteOpenModal: boolean;
     modeModal: "create" | "edit";
@@ -13,8 +12,8 @@ interface BookState {
     error: string | null;
 }
 
-const initialState: BookState = {
-    books: [],
+const initialState: PublisherState = {
+    publishers: [],
     isOpenModal: false,
     isDeleteOpenModal: false,
     modeModal: "create",
@@ -23,15 +22,10 @@ const initialState: BookState = {
     error: null,
 };
 
-const bookSlice = createSlice({
-    name: "book",
+const publisherSlice = createSlice({
+    name: "publisher",
     initialState,
     reducers: {
-        resetBook: (state) => {
-            state.books = [];
-            state.loading = false;
-            state.error = null;
-        },
         openCreateModal: (state, action: PayloadAction<{
             isOpenModal: boolean;
         }>) => {
@@ -64,38 +58,24 @@ const bookSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchBooks.pending, (state) => {
+            .addCase(fetchPublishers.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchBooks.fulfilled, (state, action: PayloadAction<{
-                data: BookType[];
+            .addCase(fetchPublishers.fulfilled, (state, action: PayloadAction<{
+                data: PublisherType[]
             }>) => {
+                state.publishers = action.payload.data;
                 state.loading = false;
-                state.books = action.payload.data;
-
             })
-            .addCase(fetchBooks.rejected, (state, action) => {
+            .addCase(fetchPublishers.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message as string;
+                state.error = action.payload as string;
             });
+    },
+});
 
-        builder
-            .addCase(deleteBook.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(deleteBook.fulfilled, (state) => {
-                state.loading = false;
 
-            })
-            .addCase(deleteBook.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.error.message as string
-            });
-    }
-})
+export const { openCreateModal, closeDeleteModal, closeModal, openDeleteModal, openEditModal } = publisherSlice.actions;
 
-export const { resetBook, openCreateModal, openEditModal, closeModal, openDeleteModal, closeDeleteModal } = bookSlice.actions;
-
-export default bookSlice.reducer;
+export default publisherSlice.reducer;

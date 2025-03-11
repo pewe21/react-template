@@ -71,7 +71,7 @@ const data = {
         },
         {
           title: "Publisher",
-          url: "#",
+          url: "/master/publisher",
         },
         {
           title: "Author",

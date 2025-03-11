@@ -17,33 +17,35 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect } from "react";
 
 import { DataTable } from "@/components/datatable";
-import { bookColumns } from "./column";
-import { fetchBooks } from "@/app/actions/bookAction";
+
 import { Button } from "@/components/ui/button";
-import { openCreateModal } from "@/app/features/bookSlice";
+import { openCreateModal } from "@/app/features/publisherSlice";
 import { PlusCircle } from "lucide-react";
-import { DeleteDialog } from "./deleteDialog";
-import { DialogCreateEditBookV2 } from "./dialogCreateEditV2";
+
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { fetchPublishers } from "@/app/actions/publisherAction";
+import { publisherColumns } from "./column";
+import { DialogCreateEditPublisher } from "./dialogCreateEdit";
+import { DeleteDialog } from "./deleteDialog";
 
-export default function Book() {
-  const { loading, books } = useSelector((state: RootState) => state.book);
-
+export default function Publisher() {
+  const { loading, publishers } = useSelector(
+    (state: RootState) => state.publisher
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchBooks());
-  }, [dispatch, fetchBooks]);
+    dispatch(fetchPublishers());
+  }, [dispatch, fetchPublishers]);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -72,7 +74,7 @@ export default function Book() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Book</BreadcrumbPage>
+                  <BreadcrumbPage>Publisher</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -80,7 +82,7 @@ export default function Book() {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="p-5">
-            <h1 className="text-2xl font-bold">Book</h1>
+            <h1 className="text-2xl font-bold">Publisher</h1>
             <div className="mt-7">
               <TooltipProvider>
                 <Tooltip>
@@ -96,17 +98,18 @@ export default function Book() {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Form Create Book | ctrl + c</p>
+                    <p>Form Create Publisher | ctrl + c</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <DialogCreateEditBookV2 />
+
+              <DialogCreateEditPublisher />
               <DeleteDialog />
 
               {loading ? (
                 <Skeleton className="mt-5 h-[225px] w-full rounded-xl" />
               ) : (
-                <DataTable columns={bookColumns} data={books} />
+                <DataTable columns={publisherColumns} data={publishers} />
               )}
             </div>
           </div>

@@ -1,5 +1,8 @@
-import { deleteBook, fetchBooks } from "@/app/actions/bookAction";
-import { closeDeleteModal } from "@/app/features/bookSlice";
+import {
+  deletePublisher,
+  fetchPublishers,
+} from "@/app/actions/publisherAction";
+import { closeDeleteModal } from "@/app/features/publisherSlice";
 import { useAppDispatch, useAppSelector } from "@/app/hook";
 import {
   AlertDialog,
@@ -16,7 +19,7 @@ import { toast } from "sonner";
 export function DeleteDialog() {
   const dispatch = useAppDispatch();
   const { isDeleteOpenModal, selectedID } = useAppSelector(
-    (state) => state.book
+    (state) => state.publisher
   );
 
   const handleCloseModal = () => {
@@ -24,14 +27,14 @@ export function DeleteDialog() {
   };
 
   const handleDelete = () => {
-    dispatch(deleteBook(selectedID as string)).then((res) => {
+    dispatch(deletePublisher(selectedID as string)).then((res) => {
       if (res.payload.status == "success") {
-        toast.success("Book has been deleted successfully", {
+        toast.success("Publisher has been deleted successfully", {
           position: "top-center",
         });
-        dispatch(fetchBooks());
+        dispatch(fetchPublishers());
       } else {
-        toast.error("Failed to delete book");
+        toast.error("Failed to delete publisher");
       }
     });
   };
@@ -42,8 +45,8 @@ export function DeleteDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the book
-            with ID: {selectedID}
+            This action cannot be undone. This will permanently delete the
+            publisher with ID: {selectedID}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
