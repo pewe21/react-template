@@ -16,32 +16,56 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { ZodError } from "zod";
+import { z, ZodError } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-export function DialogCreateEditBook() {
+export function DialogCreateEditBookV2() {
   const dispatch = useAppDispatch();
   const { isOpenModal, selectedID, modeModal } = useAppSelector(
     (state) => state.book
   );
 
-  interface FormBook {
-    code: string;
-    title: string;
-    desc: string;
+  //   interface FormBook {
+  //     code: string;
+  //     title: string;
+  //     desc: string;
+  //   }
+  let form;
+  if (modeModal === "create") {
+    form = useForm<z.infer<typeof BookValidation.CREATE>>({
+      resolver: zodResolver(BookValidation.CREATE),
+      defaultValues: {
+        code: "",
+        title: "",
+        desc: "",
+      },
+    });
+  } else {
+    form = useForm<z.infer<typeof BookValidation.EDIT>>({
+      resolver: zodResolver(BookValidation.EDIT),
+      defaultValues: {
+        code: "",
+        title: "",
+        desc: "",
+      },
+    });
   }
-
-  const [formBook, setFormBook] = useState<FormBook>({
-    code: "",
-    title: "",
-    desc: "",
-  });
 
   useEffect(() => {
     if (modeModal === "edit" && selectedID) {
       dispatch(getBookById(selectedID)).then((res) => {
         if (res.payload.data) {
-          setFormBook({
+          form.reset({
             code: res.payload.data.code,
             title: res.payload.data.name,
             desc: res.payload.data.description,
@@ -49,47 +73,48 @@ export function DialogCreateEditBook() {
         }
       });
     } else {
-      setFormBook({
+      form.reset({
         code: "",
         title: "",
         desc: "",
       });
     }
   }, [modeModal, selectedID]);
+  
 
-  const handleSubmit = () => {
-    let valid;
-    if (modeModal === "create") {
-      valid = BookValidation.CREATE.safeParse(formBook);
-    } else {
-      valid = BookValidation.EDIT.safeParse(formBook);
-    }
-
-    if (valid.error instanceof ZodError) {
-      for (const issue of valid.error.issues) {
-        toast.error(issue.message);
-      }
-
-      return;
-    }
-
-    dispatch(addBook(valid.data)).then((res) => {
+  const handleUpdate = (values: z.infer<typeof BookValidation.EDIT>) => {
+    dispatch(addBook(values)).then((res) => {
       if (res.payload.status === "success") {
-        modeModal === "create" &&
-          toast.success("Book has been created successfully", {
-            position: "top-center",
-          });
-        modeModal === "edit" &&
-          toast.success("Book has been updated successfully", {
-            position: "top-center",
-          });
+        toast.success("Book has been updated successfully", {
+          position: "top-center",
+        });
         dispatch(closeModal());
         dispatch(fetchBooks());
       } else {
         toast.error("Failed to create book");
       }
 
-      setFormBook({
+      form.reset({
+        code: "",
+        title: "",
+        desc: "",
+      });
+    });
+  };
+
+  const handleCreate = (values: z.infer<typeof BookValidation.CREATE>) => {
+    dispatch(addBook(values)).then((res) => {
+      if (res.payload.status === "success") {
+        toast.success("Book has been created successfully", {
+          position: "top-center",
+        });
+        dispatch(closeModal());
+        dispatch(fetchBooks());
+      } else {
+        toast.error("Failed to create book");
+      }
+
+      form.reset({
         code: "",
         title: "",
         desc: "",
@@ -110,7 +135,64 @@ export function DialogCreateEditBook() {
           </DialogDescription>
           <DialogClose />
         </DialogHeader>
-        <div className="grid gap-4 py-4">
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(
+              modeModal === "create" ? handleCreate : handleUpdate
+            )}
+            className="space-y-8"
+          >
+            <FormField
+              control={form.control}
+              name="code"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Code</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter Code"
+                      autoFocus
+                      disabled={modeModal === "edit"}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter Title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="desc"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Enter Description" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex justify-end space-x-4">
+              <Button type="submit">Submit</Button>
+            </div>
+          </form>
+        </Form>
+        {/* <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
               Code
@@ -154,12 +236,12 @@ export function DialogCreateEditBook() {
               }
             ></Textarea>
           </div>
-        </div>
-        <DialogFooter>
+        </div> */}
+        {/* <DialogFooter>
           <Button onClick={handleSubmit} type="submit">
             Save changes
           </Button>
-        </DialogFooter>
+        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   );

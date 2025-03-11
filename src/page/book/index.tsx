@@ -29,6 +29,13 @@ import { Button } from "@/components/ui/button";
 import { openCreateModal } from "@/app/features/bookSlice";
 import { PlusCircle } from "lucide-react";
 import { DeleteDialog } from "./deleteDialog";
+import { DialogCreateEditBookV2 } from "./dialogCreateEditV2";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function Book() {
   const { loading, books } = useSelector((state: RootState) => state.book);
@@ -38,6 +45,18 @@ export default function Book() {
   useEffect(() => {
     dispatch(fetchBooks());
   }, [dispatch, fetchBooks]);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "c" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        dispatch(openCreateModal({ isOpenModal: true }));
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   return (
     <SidebarProvider>
@@ -64,14 +83,25 @@ export default function Book() {
           <div className="p-5">
             <h1 className="text-2xl font-bold">Book</h1>
             <div className="mt-7">
-              <Button
-                variant="default"
-                onClick={() => dispatch(openCreateModal({ isOpenModal: true }))}
-              >
-                <PlusCircle />
-                Create
-              </Button>
-              <DialogCreateEditBook />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="default"
+                      onClick={() =>
+                        dispatch(openCreateModal({ isOpenModal: true }))
+                      }
+                    >
+                      <PlusCircle />
+                      Create
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Form Create Book | ctrl + c</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <DialogCreateEditBookV2 />
               <DeleteDialog />
 
               {loading ? (

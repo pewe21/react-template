@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,15 +16,8 @@ import {
   Trash,
 } from "lucide-react";
 import { BookType } from "./types";
-import { deleteBook, fetchBooks } from "@/app/actions/bookAction";
 import { useAppDispatch } from "@/app/hook";
-import { toast } from "sonner";
-import {
-  openCreateModal,
-  openDeleteModal,
-  openEditModal,
-} from "@/app/features/bookSlice";
-import { DeleteDialog } from "./deleteDialog";
+import { openDeleteModal, openEditModal } from "@/app/features/bookSlice";
 
 const bookColumns: ColumnDef<BookType>[] = [
   // {
