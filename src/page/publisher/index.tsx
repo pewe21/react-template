@@ -59,6 +59,10 @@ export default function Publisher() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  const handleOpenCreateModal = () => {
+    dispatch(openCreateModal({ isOpenModal: true }));
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -87,12 +91,7 @@ export default function Publisher() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
-                      variant="default"
-                      onClick={() =>
-                        dispatch(openCreateModal({ isOpenModal: true }))
-                      }
-                    >
+                    <Button variant="default" onClick={handleOpenCreateModal}>
                       <PlusCircle />
                       Create
                     </Button>

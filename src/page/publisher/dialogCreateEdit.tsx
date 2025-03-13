@@ -139,7 +139,7 @@ export function DialogCreateEditPublisher() {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter Name" {...field} />
+                    <Input placeholder="Enter Name" autoFocus {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

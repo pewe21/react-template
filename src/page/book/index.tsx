@@ -17,7 +17,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect } from "react";
 
@@ -35,6 +34,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function Book() {
   const { loading, books } = useSelector((state: RootState) => state.book);
@@ -56,6 +56,10 @@ export default function Book() {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
+
+  const handleOpenCreateModal = () => {
+    dispatch(openCreateModal({ isOpenModal: true }));
+  };
 
   return (
     <SidebarProvider>
@@ -85,12 +89,7 @@ export default function Book() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
-                      variant="default"
-                      onClick={() =>
-                        dispatch(openCreateModal({ isOpenModal: true }))
-                      }
-                    >
+                    <Button variant="default" onClick={handleOpenCreateModal}>
                       <PlusCircle />
                       Create
                     </Button>
@@ -100,7 +99,9 @@ export default function Book() {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
+
               <DialogCreateEditBookV2 />
+
               <DeleteDialog />
 
               {loading ? (

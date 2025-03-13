@@ -27,6 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { SendIcon } from "lucide-react";
+import FileUploader from "@/components/custom/file-uploader";
 
 export function DialogCreateEditBookV2() {
   const dispatch = useAppDispatch();
@@ -130,7 +131,7 @@ export function DialogCreateEditBookV2() {
   };
   return (
     <Dialog open={isOpenModal} onOpenChange={handleCloseModal}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] overflow-y-auto max-h-screen">
         <DialogHeader>
           <DialogTitle>
             {modeModal === "create" ? "Create Book" : "Edit Book"}
@@ -194,6 +195,13 @@ export function DialogCreateEditBookV2() {
                 </FormItem>
               )}
             />
+            <FormItem>
+              <FormLabel>Cover Image</FormLabel>
+              <FormControl>
+                <FileUploader />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
             <div className="flex justify-end space-x-4">
               <Button type="submit">
                 <SendIcon className="w-5 h-5 -ml-1" />
