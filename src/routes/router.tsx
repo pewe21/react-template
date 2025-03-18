@@ -4,6 +4,7 @@ import Dashboard from "@/page/dashboard";
 import ProtectedRoute from "./Protected";
 import { masterRouter } from "./master-route";
 import Profile from "@/page/profile";
+import LoginV2 from "@/page/login/LoginV2";
 
 const protectedRouter: RouteObject[] = [
   {
@@ -31,6 +32,10 @@ const globalRouter: RouteObject[] = [
   {
     path: "/",
     element: <Login />,
+  },
+  {
+    path: "/v2/login",
+    element: <LoginV2 />,
   },
 
   {

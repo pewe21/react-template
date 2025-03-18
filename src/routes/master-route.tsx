@@ -19,4 +19,13 @@ export const masterRouter = [
       </ProtectedRoute>
     ),
   },
+
+  {
+    path: "master/product",
+    element: (
+      <ProtectedRoute>
+        <Publisher />,
+      </ProtectedRoute>
+    ),
+  },
 ];
